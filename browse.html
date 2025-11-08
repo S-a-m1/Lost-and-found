@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Items - Lost & Found</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="logo">🔍</span>
+                <span class="brand-name">Lost & Found</span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="browse.html" class="active">Browse Items</a></li>
+                <li><a href="post-item.html">Post Item</a></li>
+                <li class="auth-section">
+                    <a href="login.html" id="loginLink">Login</a>
+                    <a href="profile.html" id="profileLink" style="display: none;">Profile</a>
+                    <button id="logoutBtn" class="btn-logout" style="display: none;">Logout</button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="items-container">
+        <div class="container">
+            <div class="items-header">
+                <h1>Browse Lost & Found Items</h1>
+                <p style="color: var(--text-light);">Search through items reported by the community</p>
+            </div>
+
+            <div class="filters">
+                <div class="filter-group">
+                    <input type="text" id="searchInput" placeholder="🔍 Search by name, description, or location...">
+                </div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" data-type="all">All Items</button>
+                <button class="tab" data-type="lost">Lost Items</button>
+                <button class="tab" data-type="found">Found Items</button>
+            </div>
+
+            <div id="itemsGrid" class="items-grid">
+                <!-- Items will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Lost & Found. Helping reunite items with their owners.</p>
+        </div>
+    </footer>
+
+    <script src="auth.js"></script>
+    <script src="items.js"></script>
+    <script>
+        let currentType = 'all';
+
+        function renderItems(items) {
+            const grid = document.getElementById('itemsGrid');
+            
+            if (items.length === 0) {
+                grid.innerHTML = `
+                    <div class="no-items">
+                        <p>No items found</p>
+                        <p>Be the first to post an item!</p>
+                        <a href="post-item.html" class="btn btn-primary">Post an Item</a>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = items.map(item => `
+                <div class="item-card">
+                    <span class="item-badge ${item.type === 'lost' ? 'badge-lost' : 'badge-found'}">
+                        ${item.type === 'lost' ? '❌ Lost' : '✅ Found'}
+                    </span>
+                    <h3>${escapeHtml(item.name)}</h3>
+                    <div class="item-info">
+                        <div class="item-info-row">
+                            <span>📍</span>
+                            <span>${escapeHtml(item.location)}</span>
+                        </div>
+                        <div class="item-info-row">
+                            <span>📅</span>
+                            <span>${itemsManager.formatDate(item.date)}</span>
+                        </div>
+                        <div class="item-info-row">
+                            <span>👤</span>
+                            <span>Posted by ${escapeHtml(item.userName)}</span>
+                        </div>
+                    </div>
+                    <p class="item-description">${escapeHtml(item.description)}</p>
+                    <div class="item-contact">
+                        <strong>Contact:</strong> ${escapeHtml(item.contactInfo)}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function filterItems() {
+            const searchQuery = document.getElementById('searchInput').value;
+            const type = currentType === 'all' ? null : currentType;
+            const items = itemsManager.searchItems(searchQuery, type);
+            
+            // Sort by most recent first
+            items.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            
+            renderItems(items);
+        }
+
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                currentType = this.dataset.type;
+                filterItems();
+            });
+        });
+
+        // Search input
+        document.getElementById('searchInput').addEventListener('input', filterItems);
+
+        // Initial load
+        filterItems();
+    </script>
+</body>
+</html>
