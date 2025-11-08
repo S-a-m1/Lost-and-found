@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Item - Lost & Found</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="logo">🔍</span>
+                <span class="brand-name">Lost & Found</span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="browse.html">Browse Items</a></li>
+                <li><a href="post-item.html" class="active">Post Item</a></li>
+                <li class="auth-section">
+                    <a href="login.html" id="loginLink">Login</a>
+                    <a href="profile.html" id="profileLink" style="display: none;">Profile</a>
+                    <button id="logoutBtn" class="btn-logout" style="display: none;">Logout</button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="items-container">
+        <div class="container">
+            <div class="auth-card" style="max-width: 700px; margin: 0 auto;">
+                <h2>Post a Lost or Found Item</h2>
+                <p style="text-align: center; color: var(--text-light); margin-bottom: 2rem;">
+                    Help reunite items with their owners by providing detailed information
+                </p>
+                <div id="message"></div>
+                <form id="postItemForm">
+                    <div class="form-group">
+                        <label for="type">Item Status *</label>
+                        <select id="type" required>
+                            <option value="">Select status</option>
+                            <option value="lost">Lost - I lost this item</option>
+                            <option value="found">Found - I found this item</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="name">Item Name *</label>
+                        <input type="text" id="name" placeholder="e.g., Black Wallet, iPhone 13, Keys" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Description *</label>
+                        <textarea id="description" placeholder="Provide detailed description: color, brand, distinctive features, etc." required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="location">Location *</label>
+                        <input type="text" id="location" placeholder="Where was it lost/found? (e.g., Central Park, Main Street)" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="date">Date *</label>
+                        <input type="date" id="date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contactInfo">Contact Information *</label>
+                        <input type="text" id="contactInfo" placeholder="Phone number or email for contact" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-full">Post Item</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Lost & Found. Helping reunite items with their owners.</p>
+        </div>
+    </footer>
+
+    <script src="auth.js"></script>
+    <script src="items.js"></script>
+    <script>
+        // Check if user is logged in
+        if (!auth.requireAuth()) {
+            // User will be redirected to login
+        }
+
+        // Set max date to today
+        document.getElementById('date').max = new Date().toISOString().split('T')[0];
+
+        document.getElementById('postItemForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!auth.isLoggedIn()) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const item = {
+                type: document.getElementById('type').value,
+                name: document.getElementById('name').value.trim(),
+                description: document.getElementById('description').value.trim(),
+                location: document.getElementById('location').value.trim(),
+                date: document.getElementById('date').value,
+                contactInfo: document.getElementById('contactInfo').value.trim(),
+                userId: auth.currentUser.id,
+                userName: auth.currentUser.name,
+                userEmail: auth.currentUser.email
+            };
+
+            if (!item.type || !item.name || !item.description || !item.location || !item.date || !item.contactInfo) {
+                document.getElementById('message').innerHTML = 
+                    '<div class="alert alert-error">Please fill in all required fields</div>';
+                return;
+            }
+
+            itemsManager.addItem(item);
+            
+            document.getElementById('message').innerHTML = 
+                '<div class="alert alert-success">Item posted successfully! Redirecting...</div>';
+            
+            setTimeout(() => {
+                window.location.href = 'browse.html';
+            }, 1500);
+        });
+    </script>
+</body>
+</html>

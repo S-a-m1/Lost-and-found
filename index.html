@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lost & Found - Find What Matters</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="logo">🔍</span>
+                <span class="brand-name">Lost & Found</span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="browse.html">Browse Items</a></li>
+                <li><a href="post-item.html">Post Item</a></li>
+                <li class="auth-section">
+                    <a href="login.html" id="loginLink">Login</a>
+                    <a href="profile.html" id="profileLink" style="display: none;">Profile</a>
+                    <button id="logoutBtn" class="btn-logout" style="display: none;">Logout</button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Lost Something? Found Something?</h1>
+                <p class="hero-subtitle">Connect with your community to reunite lost items with their owners</p>
+                <div class="hero-buttons">
+                    <a href="browse.html" class="btn btn-primary">Browse Items</a>
+                    <a href="post-item.html" class="btn btn-secondary">Post an Item</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="container">
+                <h2>How It Works</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">👤</div>
+                        <h3>Create Account</h3>
+                        <p>Sign up to post items and manage your listings</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📝</div>
+                        <h3>Post Items</h3>
+                        <p>Report lost or found items with detailed information</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔎</div>
+                        <h3>Search & Connect</h3>
+                        <p>Browse listings and connect with item owners</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta">
+            <div class="container">
+                <h2>Ready to Get Started?</h2>
+                <p>Join our community and help reunite lost items with their owners</p>
+                <a href="signup.html" class="btn btn-primary">Sign Up Now</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Lost & Found. Helping reunite items with their owners.</p>
+        </div>
+    </footer>
+
+    <script src="auth.js"></script>
+</body>
+</html>
