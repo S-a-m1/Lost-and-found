@@ -71,12 +71,14 @@ class AuthManager {
         }
 
         // Create new user
+        // Note: For demonstration purposes only - passwords are stored in plain text
+        // In production, passwords must be hashed on the server side before storage
         const user = {
             id: Date.now().toString(),
             name,
             email,
             phone,
-            password, // In production, this should be hashed
+            password, // SECURITY: In production, this must be hashed server-side
             createdAt: new Date().toISOString()
         };
 
